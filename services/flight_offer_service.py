@@ -23,6 +23,7 @@ def validate_input_data(payload):
         raise ValidationException("adults must be greater than 0")
     if int(adults) > 9:
         raise ValidationException("adults must be smaller than 10")
+    payload['adults'] = adults
 
     _max = payload.get('max')
     if not _max:
@@ -31,10 +32,19 @@ def validate_input_data(payload):
         raise ValidationException("max must be greater than 0")
     if int(_max) > 250:
         raise ValidationException("max must be smaller than 250")
+    payload['max'] = _max
+
+    nocache = payload.get('nocache') or ''
+    if str(nocache).lower() == 'true':
+        nocache = True
+    else:
+        nocache = False
+    payload['nocache'] = nocache
 
 
 def get_flights(params):
     validate_input_data(params)
+
     resp = get_cached_flight_offers(
         origin_location_code=params['origin_location_code'],
         destination_location_code=params['destination_location_code'],
