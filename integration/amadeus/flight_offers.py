@@ -30,17 +30,14 @@ def __get_uri():
 def get_flight_offers(
         origin_location_code: str,
         destination_location_code: str,
-        departure_date: str,
-        adults: int,
-        max: int,
+        departure_date: str
 ):
     url = __get_amadeus_api_host() + __get_uri()
     params = {
         "originLocationCode": origin_location_code,
         "destinationLocationCode": destination_location_code,
         "departureDate": departure_date,
-        "adults": adults,
-        "max": max
+        "adults": 1
     }
     resp = HttpClient.get(url, headers=__get_header(), query_params=params)
     return resp

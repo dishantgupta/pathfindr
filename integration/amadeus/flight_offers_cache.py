@@ -1,22 +1,23 @@
 import json
 
 from cache import redis
+from config.env import get_env_variable
 from integration.amadeus.flight_offers import get_flight_offers
 
-FLIGHT_OFFERS_TTL = 1800
+
+def __get_flight_offers_cache_ttl():
+    return int(get_env_variable("AMADEUS_FLIGHT_OFFERS_CACHE_TTL"))
 
 
 def __get_flight_offers_cache_key(
         origin_location_code: str,
         destination_location_code: str,
-        departure_date: str,
-        adults: int,
-        max: int,
+        departure_date: str
 ):
-    return "amadeus-flight-offers-cache-|{}|{}|{}|{}|{}".format(
+    return "amadeus-flight-offers-cache-|{}|{}|{}|".format(
         origin_location_code,
         destination_location_code,
-        departure_date, adults, max
+        departure_date
     )
 
 
@@ -25,7 +26,7 @@ def __create_flight_offers_cache(params):
     redis.set(
         __get_flight_offers_cache_key(**params),
         json.dumps(token),
-        ttl=FLIGHT_OFFERS_TTL
+        ttl=__get_flight_offers_cache_ttl()
     )
 
 

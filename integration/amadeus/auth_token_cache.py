@@ -1,10 +1,13 @@
 import json
 
 from cache import redis
+from config.env import get_env_variable
 from integration.amadeus.auth_token import create_access_token
 
 
-TOKEN_TTL = 1800
+def __get_auth_token_cache_ttl():
+    return int(get_env_variable("AMADEUS_ACCESS_TOKEN_CACHE_TTL"))
+
 
 def __get_auth_token_cache_key():
     return "amadeus_access_token"
@@ -12,7 +15,7 @@ def __get_auth_token_cache_key():
 
 def create_auth_token_cache():
     token = create_access_token()
-    redis.set(__get_auth_token_cache_key(), json.dumps(token), ttl=TOKEN_TTL)
+    redis.set(__get_auth_token_cache_key(), json.dumps(token), ttl=__get_auth_token_cache_ttl())
 
 
 def __get_auth_token_cache():

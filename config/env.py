@@ -18,6 +18,9 @@ def set_env_variables(app: Flask):
     app.config["AMADEUS_TOKEN_API_URI"] = os.getenv("AMADEUS_TOKEN_API_URI", "/v1/security/oauth2/token")
     app.config["AMADEUS_FLIGHT_OFFERS_API_URI"] = os.getenv("AMADEUS_FLIGHT_OFFERS_API_URI", "/v2/shopping/flight-offers")
 
+    app.config["AMADEUS_FLIGHT_OFFERS_CACHE_TTL"] = os.getenv("AMADEUS_FLIGHT_OFFERS_CACHE_TTL", "600")
+    app.config["AMADEUS_ACCESS_TOKEN_CACHE_TTL"] = os.getenv("AMADEUS_ACCESS_TOKEN_CACHE_TTL", "600")
+
     app.config["REDIS_HOST"] = os.getenv("REDIS_HOST", "localhost")
     app.config["REDIS_PORT"] = os.getenv("REDIS_HOST", "6379")
     app.config["REDIS_TTL"] = os.getenv("REDIS_TTL", "10000")

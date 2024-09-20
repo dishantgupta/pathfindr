@@ -8,4 +8,4 @@ class HealthController(View):
     methods = ["GET"]
 
     def dispatch_request(self):
-        return get_flights()
+        return {"data": "pong"}

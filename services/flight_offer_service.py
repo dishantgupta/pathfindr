@@ -5,34 +5,16 @@ from utils import validate_date
 
 def validate_input_data(payload):
 
-    if not payload.get('origin_location_code'):
-        raise ValidationException("origin_location_code is mandatory")
-    if not payload.get('destination_location_code'):
-        raise ValidationException("destination_location_code is mandatory")
+    if not payload.get('origin'):
+        raise ValidationException("origin is mandatory")
+    if not payload.get('destination'):
+        raise ValidationException("destination is mandatory")
 
-    if not payload.get('departure_date'):
-        raise ValidationException("departure_date is mandatory")
-    date = validate_date(payload.get('departure_date'))
+    if not payload.get('date'):
+        raise ValidationException("date is mandatory")
+    date = validate_date(payload.get('date'))
     if not date:
-        raise ValidationException("departure_date is invalid")
-
-    adults = payload.get('adults')
-    if not adults:
-        raise ValidationException("adults must be greater than 0")
-    if int(adults) <= 0:
-        raise ValidationException("adults must be greater than 0")
-    if int(adults) > 9:
-        raise ValidationException("adults must be smaller than 10")
-    payload['adults'] = adults
-
-    _max = payload.get('max')
-    if not _max:
-        raise ValidationException("max must be greater than 0")
-    if int(_max) <= 0:
-        raise ValidationException("max must be greater than 0")
-    if int(_max) > 250:
-        raise ValidationException("max must be smaller than 250")
-    payload['max'] = _max
+        raise ValidationException("date is invalid")
 
     nocache = payload.get('nocache') or ''
     if str(nocache).lower() == 'true':
@@ -46,10 +28,30 @@ def get_flights(params):
     validate_input_data(params)
 
     resp = get_cached_flight_offers(
-        origin_location_code=params['origin_location_code'],
-        destination_location_code=params['destination_location_code'],
-        departure_date=params['departure_date'],
-        adults=int(params['adults']), max=int(params['max']),
-        nocache=params.get('nocache') or False
+        origin_location_code=params['origin'],
+        destination_location_code=params['destination'],
+        departure_date=params['date'],
+        nocache=params.get('nocache')
     )
-    return resp
+    return format_response(resp)
+
+
+def format_response(resp):
+    flight_data_list = []
+    _data = resp.get('data', [{}])
+    if _data:
+        for data in _data:
+            flight_data = {"data": {}}
+            if data:
+                itineraries = data.get('itineraries') or []
+                if itineraries:
+                    itinerary = itineraries[0]
+                    segments = itinerary.get('segments') or []
+                    if segments:
+                        segment = segments[0]
+                        flight_data['data']['origin'] = segment['departure']['iataCode']
+                        flight_data['data']['destination'] = segment['arrival']['iataCode']
+                        flight_data['data']['departure_date'] = segment['departure']['at']
+                        flight_data['data']['price'] = data['price']['base'] + data['price']['currency']
+                        flight_data_list.append(flight_data)
+    return flight_data_list
