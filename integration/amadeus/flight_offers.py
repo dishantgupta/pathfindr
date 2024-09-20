@@ -1,10 +1,11 @@
 from config.env import get_env_variable
 from integration.amadeus.auth_token import create_access_token
+from integration.amadeus.auth_token_cache import get_auth_token
 from integration.http import HttpClient
 
 
 def __get_access_token():
-    token_resp = create_access_token()
+    token_resp = get_auth_token()
     auth_header = token_resp['token_type'] + ' ' + token_resp['access_token']
     return auth_header
 

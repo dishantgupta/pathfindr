@@ -3,6 +3,7 @@ import os
 from flask import Flask
 
 from config.env import set_env_variables
+from integration.amadeus import auth_token_cache
 from url_register import health_url_register, app_url_register
 
 
@@ -43,9 +44,13 @@ if __name__ == '__main__':
     # register app URLs
     app_url_register.add_url(app)
 
+
     app.run(
         host='localhost',
         port=8080,
         debug=True,
         load_dotenv=True
     )
+
+    # populate token cache
+    auth_token_cache.create_auth_token_cache()
