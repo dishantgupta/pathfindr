@@ -3,7 +3,7 @@ import os
 from flask import Flask
 
 from config.env import set_env_variables
-from url_register import health_url_register
+from url_register import health_url_register, app_url_register
 
 
 def init_app(test_config=None):
@@ -41,7 +41,7 @@ if __name__ == '__main__':
     health_url_register.add_url(app)
 
     # register app URLs
-
+    app_url_register.add_url(app)
 
     app.run(
         host='localhost',
