@@ -1,5 +1,5 @@
 from exception import ValidationException
-from integration.amadeus.flight_offers import get_flight_offers
+from integration.amadeus.flight_offers_cache import get_cached_flight_offers
 from utils import validate_date
 
 
@@ -35,10 +35,11 @@ def validate_input_data(payload):
 
 def get_flights(params):
     validate_input_data(params)
-    resp = get_flight_offers(
+    resp = get_cached_flight_offers(
         origin_location_code=params['origin_location_code'],
         destination_location_code=params['destination_location_code'],
         departure_date=params['departure_date'],
         adults=int(params['adults']), max=int(params['max']),
+        nocache=params.get('nocache') or False
     )
     return resp
