@@ -42,10 +42,6 @@ def init_app(test_config=None):
 if __name__ == '__main__':
     app = init_app()
 
-    # set config
-    from config.env import set_env_variables
-    set_env_variables()
-
     # populate token cache
     from integration.amadeus import auth_token_cache
     auth_token_cache.create_auth_token_cache()
