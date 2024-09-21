@@ -9,6 +9,14 @@ from url_register import health_url_register, app_url_register
 
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    handlers=[
+        logging.StreamHandler(),
+        logging.FileHandler('app.log')
+    ],
+    format="[%(asctime)s] \t [%(levelname)s] \t %(name)s:  %(message)s",
+    level=logging.DEBUG
+)
 
 
 def init_app(test_config=None):

@@ -14,22 +14,30 @@ class HttpClient:
 
     @staticmethod
     def get(url, headers=None, query_params=None):
-        resp = requests.get(url, headers=headers, params=query_params)
-        if resp.status_code not in HttpClient.SUCCESS_STATUS_CODES:
-            logger.error(
-                "Request Failed: URL: {}, params: {}, headers: {}, Response: {}".format(
-                    url, query_params, headers, resp.json())
-            )
-            raise HttpException(resp.json())
+        try:
+            resp = requests.get(url, headers=headers, params=query_params)
+            if resp.status_code not in HttpClient.SUCCESS_STATUS_CODES:
+                logger.error(
+                    "Request Failed: URL: {}, params: {}, headers: {}, Response: {}".format(
+                        url, query_params, headers, resp.json())
+                )
+                raise HttpException(resp.json())
+        except requests.exceptions.RequestException as e:
+            resp = e.response
+            raise HttpException(resp)
         return resp.json()
 
     @staticmethod
     def post(url, body, headers=None, query_params=None):
-        resp = requests.post(url, body, headers=headers, params=query_params)
-        if resp.status_code not in HttpClient.SUCCESS_STATUS_CODES:
-            logger.error(
-                "Request Failed: URL: {}, body: {}, headers: {}, Response: {}".format(
-                    url, body, headers, resp.json())
-            )
-            raise HttpException(resp.json())
+        try:
+            resp = requests.post(url, body, headers=headers, params=query_params)
+            if resp.status_code not in HttpClient.SUCCESS_STATUS_CODES:
+                logger.error(
+                    "Request Failed: URL: {}, body: {}, headers: {}, Response: {}".format(
+                        url, body, headers, resp.json())
+                )
+                raise HttpException(resp.json())
+        except requests.exceptions.RequestException as e:
+            resp = e.response
+            raise HttpException(resp)
         return resp.json()
