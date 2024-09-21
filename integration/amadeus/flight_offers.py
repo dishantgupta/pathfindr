@@ -37,7 +37,7 @@ def get_flight_offers(
         "originLocationCode": origin_location_code,
         "destinationLocationCode": destination_location_code,
         "departureDate": departure_date,
-        "adults": 1
+        "adults": 1, "currencyCode": "USD"
     }
     try:
         resp = HttpClient.get(url, headers=__get_header(), query_params=params)

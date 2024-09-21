@@ -49,8 +49,10 @@ def get_flights(params):
 
 
 def format_response(resp):
-    flight_data_list = []
     _data = resp.get('data', [{}])
+    minimum_price_flight = {}
+    minimum_price_flight_price = None
+
     if _data:
         for data in _data:
             flight_data = {"data": {}}
@@ -64,6 +66,13 @@ def format_response(resp):
                         flight_data['data']['origin'] = segment['departure']['iataCode']
                         flight_data['data']['destination'] = segment['arrival']['iataCode']
                         flight_data['data']['departure_date'] = segment['departure']['at']
-                        flight_data['data']['price'] = data['price']['base'] + data['price']['currency']
-                        flight_data_list.append(flight_data)
-    return flight_data_list
+                        flight_data['data']['price'] = data['price']['base'] + ' ' + data['price']['currency']
+
+                        if minimum_price_flight_price is None:
+                            minimum_price_flight_price = data['price']['base']
+                            minimum_price_flight = flight_data
+                        else:
+                            if data['price']['base'] < minimum_price_flight_price:
+                                minimum_price_flight_price = data['price']['base']
+                                minimum_price_flight = flight_data
+    return minimum_price_flight
