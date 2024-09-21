@@ -1,7 +1,5 @@
 #  [PathFindr] Amadeus Flight Offers Integration Service 
 
-uWSGI server integration
-abstraction of flight client
 
 ## _Introduction_
 
@@ -42,3 +40,18 @@ The application APIs can be accessed on: localhost:8080
 To run the application run the following command from the application directory
 > docker-compose run --env AMADEUS_API_KEY={} AMADEUS_API_SECRET_KEY={}
 > docker-compose up --build
+
+
+## _Further Enhancements_
+
+- abstraction of flight client 
+  - integrate multiple clients
+  - dynamically switch clients based on a property or configuration
+
+- uWSGI server integration
+  - flask server is not for production usecase, a web server needs to be integrated which redirects to flask server
+
+- Test Cases - Mock Amadeus API
+  - mock client APIs and write test scenarios for success and fail cases
+  - connection errors, http errors, invalid inputs need to be mocked for Amadeus authentication and flight offers APIs
+  - test cases validation should be done at app startup
