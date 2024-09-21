@@ -27,7 +27,7 @@ def __get_flight_offers_cache_key(
 
 def __create_flight_offers_cache(params):
     amadeus_flight_offers_resp = get_flight_offers(**params)
-    flight_offers_resp = get_cheapest_flight(amadeus_flight_offers_resp)
+    flight_offers_resp = get_cheapest_flight(amadeus_flight_offers_resp, params)
     redis.set(
         __get_flight_offers_cache_key(**params),
         json.dumps(flight_offers_resp),
@@ -54,7 +54,7 @@ def get_cached_flight_offers(nocache=False, **params):
     return resp
 
 
-def get_cheapest_flight(resp):
+def get_cheapest_flight(resp, params):
     _data = resp.get('data', [{}])
     minimum_price_flight = {}
     minimum_price_flight_price = None
@@ -68,7 +68,17 @@ def get_cheapest_flight(resp):
                     itinerary = itineraries[0]
                     segments = itinerary.get('segments') or []
                     if segments:
-                        segment = segments[0]
+                        dept_correct = False
+                        arrival_correct = False
+                        for segment in segments:
+                            if segment['departure']['iataCode'] == params['origin_location_code']:
+                                dept_correct = True
+                            if segment['arrival']['iataCode'] == params['destination_location_code']:
+                                arrival_correct = True
+
+                        if not (arrival_correct and dept_correct):
+                            continue
+
                         flight_data['data']['origin'] = segment['departure']['iataCode']
 
                         # validate destination
