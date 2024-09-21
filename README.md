@@ -44,14 +44,14 @@ To run the application run the following command from the application directory
 
 ## _Further Enhancements_
 
-- abstraction of flight client 
-  - integrate multiple clients
-  - dynamically switch clients based on a property or configuration
-
-- uWSGI server integration
+- uWSGI server integration [CRITICAL]
   - flask server is not for production usecase, a web server needs to be integrated which redirects to flask server
 
-- Test Cases - Mock Amadeus API
+- Test Cases - Mock Amadeus API [CRITICAL]
   - mock client APIs and write test scenarios for success and fail cases
   - connection errors, http errors, invalid inputs need to be mocked for Amadeus authentication and flight offers APIs
   - test cases validation should be done at app startup
+
+- abstraction of flight client [HIGH]
+  - integrate multiple clients
+  - dynamically switch clients based on a property or configuration
