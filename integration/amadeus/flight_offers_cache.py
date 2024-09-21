@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 def __get_flight_offers_cache_ttl():
-    return int(get_env_variable("AMADEUS_FLIGHT_OFFERS_CACHE_TTL"))
+    return int(get_env_variable("AMADEUS_FLIGHT_OFFERS_CACHE_TTL") or 600)
 
 
 def __get_flight_offers_cache_key(

@@ -9,16 +9,22 @@ logger = logging.getLogger(__name__)
 
 def __get_api_key():
     api_key = get_env_variable("AMADEUS_API_KEY")
+    if not api_key:
+        raise AmadeusException('AMADEUS_API_KEY is missing')
     return api_key
 
 
 def __get_api_secret_key():
     api_secret_key = get_env_variable("AMADEUS_API_SECRET_KEY")
+    if not api_secret_key:
+        raise AmadeusException('AMADEUS_API_SECRET_KEY is missing')
     return api_secret_key
 
 
 def __get_amadeus_api_host():
     api_host = get_env_variable("AMADEUS_API_HOST")
+    if not api_host:
+        raise AmadeusException('AMADEUS_API_HOST is missing')
     return api_host
 
 
@@ -40,6 +46,8 @@ def __get_payload():
 
 def __get_uri():
     uri = get_env_variable("AMADEUS_TOKEN_API_URI")
+    if not uri:
+        raise AmadeusException('AMADEUS_TOKEN_API_URI is missing')
     return uri
 
 

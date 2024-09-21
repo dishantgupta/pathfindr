@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 
 
 def __get_auth_token_cache_ttl():
-    return int(get_env_variable("AMADEUS_ACCESS_TOKEN_CACHE_TTL"))
+    return int(get_env_variable("AMADEUS_ACCESS_TOKEN_CACHE_TTL") or 1800)
 
 
 def __get_auth_token_cache_key():

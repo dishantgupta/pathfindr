@@ -25,11 +25,15 @@ def __get_header():
 
 def __get_amadeus_api_host():
     api_host = get_env_variable("AMADEUS_API_HOST")
+    if not api_host:
+        raise AmadeusException('AMADEUS_API_HOST is missing')
     return api_host
 
 
 def __get_uri():
     uri = get_env_variable("AMADEUS_FLIGHT_OFFERS_API_URI")
+    if not uri:
+        raise AmadeusException('AMADEUS_FLIGHT_OFFERS_API_URI is missing')
     return uri
 
 
