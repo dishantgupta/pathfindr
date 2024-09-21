@@ -34,12 +34,9 @@ if __name__ == '__main__':
     # register app URLs
     app_url_register.add_url(app)
 
-
     app.run(
         host='0.0.0.0',
-        port=8080,
-        debug=True,
-        load_dotenv=True
+        port=8080
     )
 
 
