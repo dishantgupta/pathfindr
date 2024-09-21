@@ -12,8 +12,7 @@ AMADEUS_UNAUTHENTICATED_ERROR_CODE = 38192
 
 
 def __get_access_token():
-    token_resp = get_cached_auth_token()
-    auth_header = token_resp['token_type'] + ' ' + token_resp['access_token']
+    auth_header = get_cached_auth_token()
     return auth_header
 
 

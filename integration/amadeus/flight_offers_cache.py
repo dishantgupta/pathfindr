@@ -26,10 +26,11 @@ def __get_flight_offers_cache_key(
 
 
 def __create_flight_offers_cache(params):
-    token = get_flight_offers(**params)
+    amadeus_flight_offers_resp = get_flight_offers(**params)
+    flight_offers_resp = get_cheapest_flight(amadeus_flight_offers_resp)
     redis.set(
         __get_flight_offers_cache_key(**params),
-        json.dumps(token),
+        json.dumps(flight_offers_resp),
         ttl=__get_flight_offers_cache_ttl()
     )
 

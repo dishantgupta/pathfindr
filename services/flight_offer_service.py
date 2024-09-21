@@ -36,7 +36,6 @@ def get_flights(params):
             departure_date=params['date'],
             nocache=params.get('nocache')
         )
-        resp = get_cheapest_flight(resp)
     except AmadeusException as e:
         data = {
             'error': e.ERROR_CODE,
@@ -47,33 +46,3 @@ def get_flights(params):
         return response
 
     return resp
-
-
-def get_cheapest_flight(resp):
-    _data = resp.get('data', [{}])
-    minimum_price_flight = {}
-    minimum_price_flight_price = None
-
-    if _data:
-        for data in _data:
-            flight_data = {"data": {}}
-            if data:
-                itineraries = data.get('itineraries') or []
-                if itineraries:
-                    itinerary = itineraries[0]
-                    segments = itinerary.get('segments') or []
-                    if segments:
-                        segment = segments[0]
-                        flight_data['data']['origin'] = segment['departure']['iataCode']
-                        flight_data['data']['destination'] = segment['arrival']['iataCode']
-                        flight_data['data']['departure_date'] = segment['departure']['at']
-                        flight_data['data']['price'] = data['price']['base'] + ' ' + data['price']['currency']
-
-                        if minimum_price_flight_price is None:
-                            minimum_price_flight_price = data['price']['base']
-                            minimum_price_flight = flight_data
-                        else:
-                            if data['price']['base'] < minimum_price_flight_price:
-                                minimum_price_flight_price = data['price']['base']
-                                minimum_price_flight = flight_data
-    return minimum_price_flight
