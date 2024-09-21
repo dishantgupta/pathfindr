@@ -3,7 +3,6 @@ import os
 
 from flask import Flask
 
-
 logger = logging.getLogger(__name__)
 logging.basicConfig(
     handlers=[
@@ -61,7 +60,7 @@ if __name__ == '__main__':
 
 
     app.run(
-        host='localhost',
+        host='0.0.0.0',
         port=8080,
         debug=True,
         load_dotenv=True
