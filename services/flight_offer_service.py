@@ -1,4 +1,6 @@
-from exception import ValidationException
+from flask import Response, make_response, jsonify
+
+from exception import ValidationException, AmadeusException
 from integration.amadeus.flight_offers_cache import get_cached_flight_offers
 from utils import validate_date
 
@@ -27,12 +29,22 @@ def validate_input_data(payload):
 def get_flights(params):
     validate_input_data(params)
 
-    resp = get_cached_flight_offers(
-        origin_location_code=params['origin'],
-        destination_location_code=params['destination'],
-        departure_date=params['date'],
-        nocache=params.get('nocache')
-    )
+    try:
+        resp = get_cached_flight_offers(
+            origin_location_code=params['origin'],
+            destination_location_code=params['destination'],
+            departure_date=params['date'],
+            nocache=params.get('nocache')
+        )
+    except AmadeusException as e:
+        data = {
+            'error': e.ERROR_CODE,
+            'error_message': e.message
+        }
+        response = make_response(jsonify(data))
+        response.status_code = 400
+        return response
+
     return format_response(resp)
 
 

@@ -1,4 +1,5 @@
 from config.env import get_env_variable
+from exception import HttpException, AmadeusException
 from integration.http import HttpClient
 
 
@@ -40,19 +41,12 @@ def __get_uri():
 
 def create_access_token():
     url = __get_amadeus_api_host() + __get_uri()
-    resp = HttpClient.post(
-        url, __get_payload(), __get_headers()
-    )
+    try:
+        resp = HttpClient.post(
+            url, __get_payload(), __get_headers()
+        )
+    except HttpException as e:
+        msg = e.message['error_description']
+        raise AmadeusException(msg)
     return resp
-
-
-
-"""
-
-curl "https://test.api.amadeus.com/v1/security/oauth2/token" \
-     -H "Content-Type: application/x-www-form-urlencoded" \
-     -d "grant_type=client_credentials&client_id={client_id}&client_secret={client_secret}"
-
-"""
-
 

@@ -23,7 +23,7 @@ def __get_auth_token_cache():
     return token
 
 
-def get_auth_token():
+def get_cached_auth_token():
     token = redis.get(__get_auth_token_cache_key())
     if not token:
         create_auth_token_cache()
