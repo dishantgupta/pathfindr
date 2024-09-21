@@ -11,8 +11,23 @@ def validate_input_data(payload):
 
     if not payload.get('origin'):
         raise ValidationException("origin is mandatory")
+    origin = str(payload.get('origin')).strip().upper()
+    payload['origin'] = origin
+
+    if not origin.isalpha():
+        raise ValidationException("origin needs to be alphabetical")
+    if len(origin) != 3:
+        raise ValidationException("origin should be a 3 letter code")
+
     if not payload.get('destination'):
         raise ValidationException("destination is mandatory")
+    destination = str(payload.get('destination')).strip().upper()
+    payload['destination'] = destination
+
+    if not destination.isalpha():
+        raise ValidationException("destination needs to be alphabetical")
+    if len(destination) != 3:
+        raise ValidationException("destination should be a 3 letter code")
 
     if not payload.get('date'):
         raise ValidationException("date is mandatory")
