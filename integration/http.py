@@ -3,7 +3,7 @@ import logging
 
 import requests
 
-from exception import HttpException
+from errors.exception import HttpException
 
 logger = logging.getLogger(__name__)
 

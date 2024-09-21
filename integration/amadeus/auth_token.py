@@ -1,6 +1,10 @@
+import logging
+
 from config.env import get_env_variable
-from exception import HttpException, AmadeusException
+from errors.exception import HttpException, AmadeusException
 from integration.http import HttpClient
+
+logger = logging.getLogger(__name__)
 
 
 def __get_api_key():
@@ -41,12 +45,20 @@ def __get_uri():
 
 def create_access_token():
     url = __get_amadeus_api_host() + __get_uri()
+    headers = __get_headers()
+    payload = __get_payload()
     try:
-        resp = HttpClient.post(
-            url, __get_payload(), __get_headers()
+        logger.debug(
+            "fetching AMADEUS Access Token: url: {url}".format(url=url)
         )
+        resp = HttpClient.post(url, payload, headers)
+        logger.debug("successfully fetched AMADEUS Access Token")
     except HttpException as e:
-        msg = e.message['error_description']
-        raise AmadeusException(msg)
+        logger.error(
+            "AMADEUS Access Token fetch failed with error: {} url: {} payload: {} header: {}".format(
+                e.message, url, payload, headers
+            )
+        )
+        raise AmadeusException(e.message)
     return resp
 

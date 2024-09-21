@@ -1,6 +1,8 @@
+import logging
+
 from flask.views import View
 
-from services.flight_offer_service import get_flights
+logger = logging.getLogger(__name__)
 
 
 class HealthController(View):
@@ -8,4 +10,5 @@ class HealthController(View):
     methods = ["GET"]
 
     def dispatch_request(self):
+        logger.debug("/flights/ping called: health check OK")
         return {"data": "pong"}

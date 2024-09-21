@@ -1,8 +1,8 @@
-from flask import Response, make_response, jsonify
+from flask import make_response, jsonify
 
-from exception import ValidationException, AmadeusException
+from errors.exception import ValidationException, AmadeusException
 from integration.amadeus.flight_offers_cache import get_cached_flight_offers
-from utils import validate_date
+from utils.utils import validate_date
 
 
 def validate_input_data(payload):
@@ -36,6 +36,7 @@ def get_flights(params):
             departure_date=params['date'],
             nocache=params.get('nocache')
         )
+        resp = get_cheapest_flight(resp)
     except AmadeusException as e:
         data = {
             'error': e.ERROR_CODE,
@@ -45,10 +46,10 @@ def get_flights(params):
         response.status_code = 400
         return response
 
-    return format_response(resp)
+    return resp
 
 
-def format_response(resp):
+def get_cheapest_flight(resp):
     _data = resp.get('data', [{}])
     minimum_price_flight = {}
     minimum_price_flight_price = None

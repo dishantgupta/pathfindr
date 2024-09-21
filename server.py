@@ -1,3 +1,4 @@
+import logging
 import os
 
 from flask import Flask
@@ -5,6 +6,9 @@ from flask import Flask
 from config.env import set_env_variables
 from integration.amadeus import auth_token_cache
 from url_register import health_url_register, app_url_register
+
+
+logger = logging.getLogger(__name__)
 
 
 def init_app(test_config=None):
@@ -54,3 +58,4 @@ if __name__ == '__main__':
 
     # populate token cache
     auth_token_cache.create_auth_token_cache()
+    logger.debug("generated AMADEUS access token and refresh in cache")

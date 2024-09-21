@@ -1,8 +1,11 @@
 import json
+import logging
 
 from cache import redis
 from config.env import get_env_variable
 from integration.amadeus.auth_token import create_access_token
+
+logger = logging.getLogger(__name__)
 
 
 def __get_auth_token_cache_ttl():
@@ -26,9 +29,10 @@ def __get_auth_token_cache():
 def get_cached_auth_token():
     token = redis.get(__get_auth_token_cache_key())
     if not token:
+        logger.debug("AMADEUS access token not found in cache, generating token")
         create_auth_token_cache()
+        logger.debug("AMADEUS access token not found in cache, token generated, cache set")
         token = redis.get(__get_auth_token_cache_key())
-
     token = json.loads(token)
     return token
 

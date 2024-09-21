@@ -1,7 +1,14 @@
+import logging
+
 from config.env import get_env_variable
-from exception import HttpException, AmadeusException
+from errors.exception import HttpException, AmadeusException
 from integration.amadeus.auth_token_cache import get_cached_auth_token, create_auth_token_cache
 from integration.http import HttpClient
+
+logger = logging.getLogger(__name__)
+
+
+AMADEUS_UNAUTHENTICATED_ERROR_CODE = 38192
 
 
 def __get_access_token():
@@ -39,14 +46,39 @@ def get_flight_offers(
         "departureDate": departure_date,
         "adults": 1, "currencyCode": "USD"
     }
+    headers = None
     try:
-        resp = HttpClient.get(url, headers=__get_header(), query_params=params)
+        headers = __get_header()
+
+        logger.debug(
+            "fetching AMADEUS Flight Offers: url: {url} params: {params}".format(
+                url=url, params=params
+            )
+        )
+        resp = HttpClient.get(url, headers=headers, query_params=params)
+        logger.debug(
+            "AMADEUS Flight Offers Success: url: {url} params: {params} resp: {resp}".format(
+                url=url, params=params, resp=resp
+            )
+        )
     except HttpException as e:
+        logger.error(
+            "AMADEUS Flight Offers failed with error: {} url: {} params: {} header: {}".format(
+                e.message, url, params, headers
+            )
+        )
+
         msg = ''
         data = e.message
         for err in data.get('errors') or []:
-            if err["code"] == 38192 and retry:
+            if err["code"] == AMADEUS_UNAUTHENTICATED_ERROR_CODE and retry:
+                logger.debug(
+                    "AMADEUS Flight Offers API failed due to Token Expire. creating new token and setting cache"
+                )
                 create_auth_token_cache()
+                logger.debug(
+                    "AMADEUS Flight Offers API failed due to Token Expire. token generated"
+                )
                 return get_flight_offers(
                     origin_location_code,
                     destination_location_code,
