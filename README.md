@@ -37,9 +37,10 @@ The application APIs can be accessed on: localhost:8080
 
 ## _Run_
 
-To run the application run the following command from the application directory
-> docker-compose run --env AMADEUS_API_KEY={} AMADEUS_API_SECRET_KEY={}
-> docker-compose up --build
+To run the application, first create a secrets.env file to add the before mentioned env variables.
+Then, run the following command from the application directory
+
+> docker compose up --build
 
 
 ## _Further Enhancements_

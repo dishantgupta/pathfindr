@@ -18,6 +18,7 @@ services:
       - REDIS_HOST=redis
     env_file:
       - properties.env
+      - secrets.env
     volumes:
       - .:/app
 
