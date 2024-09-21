@@ -32,8 +32,18 @@ def validate_input_data(payload):
 
 
 def get_flights(params):
+
     try:
         validate_input_data(params)
+        resp = get_cached_flight_offers(
+            origin_location_code=params['origin'],
+            destination_location_code=params['destination'],
+            departure_date=params['date'],
+            nocache=params.get('nocache')
+        )
+        response = make_response(jsonify(resp))
+        response.status_code = 200
+        return response
     except ValidationException as e:
         data = {
             'error': e.ERROR_CODE,
@@ -42,14 +52,6 @@ def get_flights(params):
         response = make_response(jsonify(data))
         response.status_code = 400
         return response
-
-    try:
-        resp = get_cached_flight_offers(
-            origin_location_code=params['origin'],
-            destination_location_code=params['destination'],
-            departure_date=params['date'],
-            nocache=params.get('nocache')
-        )
     except AmadeusException as e:
         data = {
             'error': e.ERROR_CODE,
@@ -59,4 +61,3 @@ def get_flights(params):
         response.status_code = 400
         return response
 
-    return resp

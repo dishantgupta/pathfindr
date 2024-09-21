@@ -3,10 +3,6 @@ import os
 
 from flask import Flask
 
-from config.env import set_env_variables
-from integration.amadeus import auth_token_cache
-from url_register import health_url_register, app_url_register
-
 
 logger = logging.getLogger(__name__)
 logging.basicConfig(
@@ -48,9 +44,16 @@ if __name__ == '__main__':
     app = init_app()
 
     # set config
+    from config.env import set_env_variables
     set_env_variables()
 
+    # populate token cache
+    from integration.amadeus import auth_token_cache
+    auth_token_cache.create_auth_token_cache()
+    logger.debug("generated AMADEUS access token and refresh in cache")
+
     # register health URLs
+    from url_register import health_url_register, app_url_register
     health_url_register.add_url(app)
 
     # register app URLs
@@ -64,6 +67,4 @@ if __name__ == '__main__':
         load_dotenv=True
     )
 
-    # populate token cache
-    auth_token_cache.create_auth_token_cache()
-    logger.debug("generated AMADEUS access token and refresh in cache")
+

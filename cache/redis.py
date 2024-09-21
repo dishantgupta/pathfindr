@@ -10,7 +10,7 @@ def __get_redis_host():
 
 
 def __get_redis_port():
-    return get_env_variable("REDIS_PORT")
+    return int(get_env_variable("REDIS_PORT"))
 
 
 def __get_redis_ttl():
@@ -25,7 +25,13 @@ def __get_redis():
     )
 
 
-__redis = __get_redis()
+__pool = redis.ConnectionPool(
+    host=__get_redis_host(),
+    port=__get_redis_port(),
+    db=0,
+    max_connections=20
+)
+__redis = redis.Redis(connection_pool=__pool)
 
 
 def set(k, v, ttl=None):

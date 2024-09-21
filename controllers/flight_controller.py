@@ -15,5 +15,5 @@ class FlightController(View):
         params = dict(request.args)
         logger.debug("/flights/price api called: params: {}".format(params))
         resp = get_flights(params)
-        logger.debug("/flights/price api success: params: {} resp: {}".format(params, resp))
+        logger.debug("/flights/price api response: params: {} resp: {}".format(params, resp.json))
         return resp

@@ -4,7 +4,7 @@
 
 # TODO
 
-    - redis connection handling
+    - redis connection pooling
     - token not generating on app startup
 
     - IATA code verification
