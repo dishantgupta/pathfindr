@@ -1,4 +1,4 @@
-
+import logging
 
 import redis
 
@@ -25,6 +25,8 @@ def __get_redis():
     )
 
 
+logger = logging.getLogger(__name__)
+logger.info("connecting to redis: host: {}, port: {}".format(__get_redis_host(), __get_redis_port()))
 __pool = redis.ConnectionPool(
     host=__get_redis_host(),
     port=__get_redis_port(),
