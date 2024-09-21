@@ -70,15 +70,18 @@ def get_cheapest_flight(resp):
                     if segments:
                         segment = segments[0]
                         flight_data['data']['origin'] = segment['departure']['iataCode']
+
+                        # validate destination
+
                         flight_data['data']['destination'] = segment['arrival']['iataCode']
                         flight_data['data']['departure_date'] = segment['departure']['at']
-                        flight_data['data']['price'] = data['price']['base'] + ' ' + data['price']['currency']
+                        flight_data['data']['price'] = data['price']['total'] + ' ' + data['price']['currency']
 
                         if minimum_price_flight_price is None:
-                            minimum_price_flight_price = data['price']['base']
+                            minimum_price_flight_price = float(data['price']['total'])
                             minimum_price_flight = flight_data
                         else:
-                            if data['price']['base'] < minimum_price_flight_price:
-                                minimum_price_flight_price = data['price']['base']
+                            if float(data['price']['total']) < minimum_price_flight_price:
+                                minimum_price_flight_price = float(data['price']['total'])
                                 minimum_price_flight = flight_data
     return minimum_price_flight
