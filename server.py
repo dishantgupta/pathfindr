@@ -48,7 +48,7 @@ if __name__ == '__main__':
     app = init_app()
 
     # set config
-    set_env_variables(app)
+    set_env_variables()
 
     # register health URLs
     health_url_register.add_url(app)

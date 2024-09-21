@@ -25,11 +25,12 @@ def __get_redis():
     )
 
 
+__redis = __get_redis()
+
+
 def set(k, v, ttl=None):
-    r = __get_redis()
-    return r.set(k, v, ex=ttl or __get_redis_ttl())
+    return __redis.set(k, v, ex=ttl or __get_redis_ttl())
 
 
 def get(k):
-    r = __get_redis()
-    return r.get(k)
+    return __redis.get(k)

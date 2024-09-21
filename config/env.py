@@ -1,26 +1,19 @@
 import os
 
-from flask import Flask
-from flask import current_app
-
-
-app = Flask(__name__)
-
 
 def get_env_variable(key):
-    return current_app.config[key]
+    return os.environ.get(key) or None
 
 
-def set_env_variables(app: Flask):
-    app.config["AMADEUS_API_KEY"] = os.getenv("AMADEUS_API_KEY", "KDzdGffAcDALOLdXrd1BK1xWP6LmUoro")
-    app.config["AMADEUS_API_SECRET_KEY"] = os.getenv("AMADEUS_API_SECRET_KEY", "Ateg3JNMLLmVefig")
-    app.config["AMADEUS_API_HOST"] = os.getenv("AMADEUS_API_HOST", "https://test.api.amadeus.com")
-    app.config["AMADEUS_TOKEN_API_URI"] = os.getenv("AMADEUS_TOKEN_API_URI", "/v1/security/oauth2/token")
-    app.config["AMADEUS_FLIGHT_OFFERS_API_URI"] = os.getenv("AMADEUS_FLIGHT_OFFERS_API_URI", "/v2/shopping/flight-offers")
+def set_env_variables():
+    os.environ["AMADEUS_API_KEY"] = "KDzdGffAcDALOLdXrd1BK1xWP6LmUoro"
+    os.environ["AMADEUS_API_SECRET_KEY"] = "Ateg3JNMLLmVefig"
+    os.environ["AMADEUS_API_HOST"] = "https://test.api.amadeus.com"
+    os.environ["AMADEUS_TOKEN_API_URI"] = "/v1/security/oauth2/token"
+    os.environ["AMADEUS_FLIGHT_OFFERS_API_URI"] = "/v2/shopping/flight-offers"
+    os.environ["AMADEUS_FLIGHT_OFFERS_CACHE_TTL"] = "600"
+    os.environ["AMADEUS_ACCESS_TOKEN_CACHE_TTL"] = "1800"
+    os.environ["REDIS_HOST"] = "localhost"
+    os.environ["REDIS_PORT"] = "6379"
+    os.environ["REDIS_TTL"] = "1800"
 
-    app.config["AMADEUS_FLIGHT_OFFERS_CACHE_TTL"] = os.getenv("AMADEUS_FLIGHT_OFFERS_CACHE_TTL", "600")
-    app.config["AMADEUS_ACCESS_TOKEN_CACHE_TTL"] = os.getenv("AMADEUS_ACCESS_TOKEN_CACHE_TTL", "600")
-
-    app.config["REDIS_HOST"] = os.getenv("REDIS_HOST", "localhost")
-    app.config["REDIS_PORT"] = os.getenv("REDIS_HOST", "6379")
-    app.config["REDIS_TTL"] = os.getenv("REDIS_TTL", "10000")
